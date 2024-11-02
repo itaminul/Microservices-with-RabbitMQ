@@ -2,14 +2,19 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Order } from "../entity/Order";
 import { sendOrderMessage } from "../rabbitMQ/rabbitmqService";
+
 export class OrderController {
   async createOrder(req: Request, res: Response) {
     const orderRepository = AppDataSource.getRepository(Order);
 
-    const order = orderRepository.create(req.body);
+    // Create orders from the request body
+    const orders = Array.isArray(req.body) ? req.body : [req.body];
+    const savedOrders = await orderRepository.save(orders);
 
-    await orderRepository.save(order);
-    // sendOrderMessage(order);
-    res.status(2001).send(order);
+    // Send each saved order to RabbitMQ
+    savedOrders.forEach((order) => sendOrderMessage(order));
+
+    // Respond with the saved orders
+    res.status(201).send(savedOrders); // Use 201 for created
   }
 }
