@@ -1,17 +1,17 @@
 import "reflect-metadata";
 
-
 import { DataSource } from "typeorm";
-import { Order } from "./entity/Order";
+
 import { User } from "./entity/User";
+import { Delivery } from "./entity/Delivery";
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
   port: 5432,
   username: "erpdb",
   password: "123456",
-  database: "order_db",
-  entities: [Order, User],
+  database: "delivery_db",
+  entities: [Delivery, User],
   migrations: ["src/migrations/*{.ts,.js}"],
   synchronize: true,
   logging: true,

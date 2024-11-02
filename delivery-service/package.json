@@ -1,0 +1,36 @@
+{
+  "name": "deliery-service",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "nodemon src/app.ts",
+    "dev": "concurrently \"tsc --watch\" \"nodemon --watch dist --exec node dist/app.js\"",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migration:generate": "npm run build && npm run typeorm -- migration:generate -d ./dist/data-source.js",
+    "migration:run": "npm run build && npm run typeorm -- migration:run -d ./dist/data-source.js",
+    "migration:revert": "npm run build && npm run typeorm -- migration:revert -d ./dist/data-source.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "amqplib": "^0.10.4",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.6",
+    "concurrently": "^9.0.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  }
+}
