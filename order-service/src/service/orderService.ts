@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Order } from "../entity/Order";
 import successResponse from "../middlewares/successResponse";
-import { sendOrderMessage } from "../rabbitMQ/rabbitmqService";
+import { sendOrderMessage } from "../rabbitMQ/orderMessages";
 
 export class OrderService {
   async createOrder(req: Request, res: Response, next: NextFunction) {
