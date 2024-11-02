@@ -1,12 +1,19 @@
 import amqp from "amqplib";
 import { Order } from "../entity/Order";
-const queue = "orders";
 export const sendOrderMessage = async (order: Order) => {
-  const connection = await amqp.connect("amqp://localhost");
-  const channel = await connection.createChannel();
-  await channel.assertQueue(queue);
-  channel.sendToQueue(queue, Buffer.from(JSON.stringify(order)));
-  setTimeout(() => {
-    connection.close();
-  }, 5000);
+  try {
+    const connection = await amqp.connect("amqp://localhost");
+    if (!connection) {
+      throw new Error("RabbitMQ connection is not established");
+    }
+    const channel = await connection.createChannel();
+    const queue = "order_queue";
+    await channel.assertQueue(queue, { durable: true });
+    channel.sendToQueue(queue, Buffer.from(JSON.stringify(order)), {
+      persistent: true,
+    });
+    await channel.close();
+  } catch (error) {
+    console.error("Error sending message to RabbitMQ:", error);
+  }
 };
