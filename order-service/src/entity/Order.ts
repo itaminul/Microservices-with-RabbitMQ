@@ -13,4 +13,7 @@ export class Order {
 
   @Column()
   quantity?: number;
+  
+  @Column()
+  status?: string;
 }
