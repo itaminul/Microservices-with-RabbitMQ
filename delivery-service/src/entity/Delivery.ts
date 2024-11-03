@@ -17,6 +17,6 @@ export class Delivery {
   @Column()
   quantity?: number;
 
-  @Column("boolean", { default: "false" })
-  deliveryStatus?: boolean;
+  @Column()
+  deliveryStatus?: string;
 }
