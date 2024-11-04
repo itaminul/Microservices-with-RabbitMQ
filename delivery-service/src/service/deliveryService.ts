@@ -20,10 +20,10 @@ export class DeliveryService {
     const orderRepository = AppDataSource.getRepository(Delivery);
     const order = new Delivery();
     order.usersId = usersId;
-    order.orderId = 11;
+    order.orderId = 33;
     order.product = "dasfa",
     order.quantity = 1,
-    order.deliveryStatus = deliveryStatus
+    order.status = deliveryStatus
     //start a transaction
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
@@ -36,7 +36,7 @@ export class DeliveryService {
       // successResponse(res, sendOrder);
     } catch (error) {
       console.error(`Failed to send order ${order.id} to queue:`, error);
-      order.deliveryStatus = "CREATION_FAILED";
+      order.status = "CREATION_FAILED";
       await queryRunner.rollbackTransaction();
       return await orderRepository.save(order);
       // successResponse(res, savedOrder);
@@ -54,7 +54,7 @@ export class DeliveryService {
     }
   }
 
-  async processOrder(usersId: number, deliveryStatus: string): Promise<void> {
-    await this.createDelivery(usersId, deliveryStatus);
+  async processOrder(usersId: number, status: string): Promise<void> {
+    await this.createDelivery(usersId, status);
   }
 }

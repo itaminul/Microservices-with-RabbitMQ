@@ -33,6 +33,7 @@ export class OrderConsumer {
       if (msg) {
         try {
           const content = JSON.parse(msg.content.toString());
+          console.log("content", content);
           await this.orderService.updateOrderStatus(content.orderId, content.status);
           this.channel?.ack(msg);
         } catch (error) {

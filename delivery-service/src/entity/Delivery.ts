@@ -18,5 +18,5 @@ export class Delivery {
   quantity?: number;
 
   @Column()
-  deliveryStatus?: string;
+  status?: string;
 }

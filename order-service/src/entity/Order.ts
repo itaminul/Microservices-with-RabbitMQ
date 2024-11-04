@@ -15,5 +15,5 @@ export class Order {
   quantity?: number;
   
   @Column()
-  orderStatus?: string;
+  status?: string;
 }
