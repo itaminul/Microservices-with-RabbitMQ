@@ -1,7 +1,12 @@
 import { Router } from "express";
 import { OrderController } from "../controllers/orderController";
-const orderController = new OrderController();
+import   { OrderService } from "../service/orderService";
+
+let orderService: OrderService;
+
+ orderService = new OrderService();
+const orderController = new OrderController(orderService);
 const router = Router();
 router.post("/createOrder", orderController.createOrder);
-router.get("/getOrder", orderController.getAll);
+// router.get("/getOrder", orderController.getAll);
 export default router;
