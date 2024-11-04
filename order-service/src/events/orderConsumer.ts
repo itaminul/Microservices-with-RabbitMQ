@@ -1,7 +1,6 @@
 import amqp, { Connection, Channel } from "amqplib";
 import { OrderService } from "../service/orderService";
 
-
 export class OrderConsumer {
   private connection: Connection | null = null;
   private channel: Channel | null = null;
@@ -34,7 +33,16 @@ export class OrderConsumer {
         try {
           const content = JSON.parse(msg.content.toString());
           console.log("content", content);
-          await this.orderService.updateOrderStatus(content.orderId, content.status);
+          const orderId = content.orderId; // Extract orderId
+          if (!orderId) {
+            console.error("Order ID is missing in the message.");
+            //   this.channel.nack(msg); // Reject the message if orderId is missing
+            return;
+          }
+          await this.orderService.updateOrderStatus(
+            content.orderId,
+            content.status
+          );
           this.channel?.ack(msg);
         } catch (error) {
           console.error("Error processing message:", error);

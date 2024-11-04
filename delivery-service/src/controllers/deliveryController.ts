@@ -3,13 +3,12 @@ import { DeliveryService } from "../service/deliveryService";
 const deliveryService = new DeliveryService();
 export class DeliveryController {
   async createDelivery(req: Request, res: Response) {
-    const { usersId, deliveryStatus, orderId } = req.body; 
-    const statusCheck = "DELIVERED";
+    const { usersId, status, orderId } = req.body;
     try {
       const deliver = await deliveryService.createDelivery(
         usersId,
         orderId,
-        statusCheck
+        status
       );
 
       res.status(201).json(deliver);
