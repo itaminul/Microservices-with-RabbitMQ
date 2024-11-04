@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Order } from "../entity/Order";
 import successResponse from "../middlewares/successResponse";
-import { OrderProducer } from "../rabbitMQ/orderProducer";
-import { OrderConsumer } from "../rabbitMQ/orderConsumer";
+import { OrderProducer } from "../events/orderProducer";
+import { OrderConsumer } from "../events/orderConsumer";
 /*
 export class OrderService {
 

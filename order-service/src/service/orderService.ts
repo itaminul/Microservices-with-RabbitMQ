@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Order } from "../entity/Order";
 import successResponse from "../middlewares/successResponse";
-import { OrderProducer } from "../rabbitMQ/orderProducer";
-import { OrderConsumer } from "../rabbitMQ/orderConsumer";
+import { OrderProducer } from "../events/orderProducer";
+import { OrderConsumer } from "../events/orderConsumer";
 
 export class OrderService {
   private orderProducer: OrderProducer;
@@ -62,6 +62,19 @@ export class OrderService {
       },
     });
   }
+
+  async getOrderById(req: Request) {
+    const id = Number(req.params.id)
+    const orderRepository = AppDataSource.getRepository(Order);
+    const results = await orderRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    return results;
+   
+  }
+
 
   async updateOrderStatus(id: number, status: string) {
     console.log('Updating order:', id); // Log values

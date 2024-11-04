@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 
 import successResponse from "../middlewares/successResponse";
-import { DeliveryProducer } from "../rabbitMQ/deliveryProducer";
+import { DeliveryProducer } from "../events/deliveryProducer";
 import { Delivery } from "../entity/Delivery";
-import { DeliveryConsumer } from "../rabbitMQ/deliveryConsumer";
+import { DeliveryConsumer } from "../events/deliveryConsumer";
 export class DeliveryService {
   private deliveryProducer: DeliveryProducer;
   private deliveryConsume: DeliveryConsumer;
@@ -20,29 +20,42 @@ export class DeliveryService {
     await this.deliveryConsume.initialize();
   }
 
-  async createDelivery(usersId: number, deliveryStatus: string) {
-    const orderRepository = AppDataSource.getRepository(Delivery);
+  async createDelivery(usersId: number, orderId: number, deliveryStatus: string) {
+    const deliveryRepository = AppDataSource.getRepository(Delivery);
+
+    /*
+      const orderUrl = `http://localhost:3000/api/order/getOrderById/${orderId}`;
+    const response = await axios.get(orderUrl);
+    const orderData = response.data;
+    console.log("orderData", orderData)
     const order = new Delivery();
-    order.usersId = usersId;
-    order.orderId = 33;
-    (order.product = "dasfa"),
-      (order.quantity = 1),
-      (order.status = deliveryStatus);
+    order.usersId = orderData.usersId;
+    order.orderId = orderData.id;
+    order.product = orderData.product,
+    order.quantity = orderData.quantity,
+    order.status = deliveryStatus;
+    */
+    const deliver = new Delivery();
+    deliver.usersId = usersId;
+    deliver.orderId = orderId;
+    (deliver.product = "dasfa"),
+      (deliver.quantity = 1),
+      (deliver.status = deliveryStatus);
     //start a transaction
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      await orderRepository.save(order);
+      await deliveryRepository.save(deliver);
       await queryRunner.commitTransaction();
 
-      await this.deliveryProducer.sendDeliveryStatus(order);
+      await this.deliveryProducer.sendDeliveryStatus(deliver);
       // successResponse(res, sendOrder);
     } catch (error) {
-      console.error(`Failed to send order ${order.id} to queue:`, error);
-      order.status = "CREATION_FAILED";
+      console.error(`Failed to send order ${deliver.id} to queue:`, error);
+      deliver.status = "CREATION_FAILED";
       await queryRunner.rollbackTransaction();
-      return await orderRepository.save(order);
+      return await deliveryRepository.save(deliver);
       // successResponse(res, savedOrder);
     } finally {
       await queryRunner.release();
@@ -58,8 +71,8 @@ export class DeliveryService {
     }
   }
 
-  async processOrder(usersId: number, status: string): Promise<void> {
-    await this.createDelivery(usersId, status);
+  async processOrder(usersId: number, orderId: number, status: string): Promise<void> {
+    await this.createDelivery(usersId, orderId,status);
   }
 
   async closeMessaging(): Promise<void> {
