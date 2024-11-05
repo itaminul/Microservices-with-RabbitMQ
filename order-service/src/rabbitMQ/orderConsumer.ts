@@ -17,7 +17,6 @@ export class OrderConsumer {
       this.connection = await amqp.connect("amqp://localhost");
       this.channel = await this.connection.createChannel();
       await this.channel.assertQueue(this.queue, { durable: true });
-      console.log("OrderConsumer initialized successfully");
       this.consume();
     } catch (error) {
       console.error("Failed to initialize OrderConsumer:", error);
@@ -52,7 +51,6 @@ export class OrderConsumer {
       if (this.connection) {
         await this.connection.close();
       }
-      console.log("OrderConsumer closed successfully");
     } catch (error) {
       console.error("Error closing OrderConsumer:", error);
       throw error;
