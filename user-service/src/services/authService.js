@@ -1,4 +1,4 @@
-import prismaService from "../config/prismaClient";
+import prismaService from "../config/prismaClient.js";
 export class AuthServices {
     async create(data) {
         try {
@@ -7,7 +7,8 @@ export class AuthServices {
                     name: data.name,
                     username: data.username,
                     password: data.password,
-                    email: data.email
+                    email: data.email,
+                    createdBy: data.createdBy
                 }
             })
             return results;
@@ -20,7 +21,7 @@ export class AuthServices {
         try {
             const results = await prismaService.user.findUnique({
                 where: {
-                    username: username
+                    username
                 }
             });
             return results;
