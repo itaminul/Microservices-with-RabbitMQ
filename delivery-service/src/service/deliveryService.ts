@@ -2,24 +2,44 @@ import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 
 import successResponse from "../middlewares/successResponse";
-import { OrderProducer } from "../rabbitMQ/orderProducer";
+import { DeliveryProducer } from "../rabbitMQ/deliveryProducer";
 import { Delivery } from "../entity/Delivery";
-export class OrderService {
-  async createOrder(req: Request, res: Response, next: NextFunction) {
-    const orders = Array.isArray(req.body) ? req.body : [req.body];
+export class DeliveryService {
+  private deliveryProducer: DeliveryProducer;
+
+  constructor() {
+    this.deliveryProducer = new DeliveryProducer();
+    this.initialize();
+  }
+
+  private async initialize() {
+    await this.deliveryProducer.initialize();
+  }
+
+  async createDelivery(deliveryId: number, status: string) {
+    const orderRepository = AppDataSource.getRepository(Delivery);
+    const order = new Delivery();
+    order.usersId = deliveryId;
+    order.orderId = 11;
+    (order.product = "dasfa"),
+      (order.quantity = 1),
+      (order.deliveryStatus = false);
     //start a transaction
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const savedOrders = await queryRunner.manager.save(Delivery, orders);
-      await Promise.all(savedOrders.map((order) => OrderProducer(order)));
-      // Commit the transaction
+       await orderRepository.save(order);
       await queryRunner.commitTransaction();
-      successResponse(res, savedOrders);
+
+       await this.deliveryProducer.sendDeliveryStatus(order);
+      // successResponse(res, sendOrder);
     } catch (error) {
+      console.error(`Failed to send order ${order.id} to queue:`, error);
+      order.deliveryStatus = false;
       await queryRunner.rollbackTransaction();
-      next(error);
+      return await orderRepository.save(order);
+      // successResponse(res, savedOrder);
     } finally {
       await queryRunner.release();
     }
@@ -32,5 +52,9 @@ export class OrderService {
     } catch (error) {
       next(error);
     }
+  }
+
+  async processOrder(deliveryId: number, status: string): Promise<void> {
+    await this.createDelivery(deliveryId, status);
   }
 }
