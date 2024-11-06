@@ -1,10 +1,16 @@
-import express from 'express'
-const app = express()
-import router from './routes/indexRoutes.js'
-app.use('/api', router)
-const port = process.env.PORT || 3003
-app.listen(port, () => {
-  console.log(`Users service listening on port ${port}`)
-})
+import express from 'express';
+const app = express();
+const port = 3003;
+app.get('/', async (req, res) => {
+  try {
+    const users = await db.select('*').from('users');
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
-export default app
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
