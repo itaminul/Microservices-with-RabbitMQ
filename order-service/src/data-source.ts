@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: "order_db",
   entities: [Order, User],
   migrations: ["src/migrations/*{.ts,.js}"],
-  synchronize: false,
+  synchronize: true,
   logging: true,
 });
 
