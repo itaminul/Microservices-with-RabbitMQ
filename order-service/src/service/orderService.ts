@@ -30,7 +30,7 @@ export class OrderService {
     order.usersId = req.body.usersId;
     order.product = req.body.product;
     order.quantity = req.body.quantity;
-    order.orderStatus = "PENDING";
+    order.status = "PENDING";
 
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
@@ -43,7 +43,7 @@ export class OrderService {
       // successResponse(res, sendOrder);
     } catch (error) {
       console.error(`Failed to send order ${order.id} to queue:`, error);
-      order.orderStatus = "QUEUE_FAILED";
+      order.status = "QUEUE_FAILED";
       await queryRunner.rollbackTransaction();
       const savedOrder = await orderRepository.save(order);
       // successResponse(res, savedOrder);
@@ -63,11 +63,24 @@ export class OrderService {
     });
   }
 
-  async updateOrderStatus(id: number, orderStatus: string) {
+  async updateOrderStatus(id: number, status: string) {
+    console.log('Updating order:', id); // Log values
+    console.log('Updating status:', status); // Log values
     const orderRepository = AppDataSource.getRepository(Order);
-    await orderRepository.update(id, { orderStatus: orderStatus });
-    console.log(`Order ${id} status updated to ${orderStatus}`);
+    const updateResult = await orderRepository.update(id, { status });
+  
+    if (updateResult.affected === 0) {
+      console.error(`Order ${id} not found or not updated.`);
+    } else {
+      console.log(`Order ${id} status updated to ${status}`);
+    }
   }
+
+  // async updateOrderStatus(id: number, orderStatus: string) {
+  //   const orderRepository = AppDataSource.getRepository(Order);
+  //   await orderRepository.update(id, { orderStatus: orderStatus });
+  //   console.log(`Order ${id} status updated to ${orderStatus}`);
+  // }
 
   async closeMessaging(): Promise<void> {
     await this.orderProducer.close();
