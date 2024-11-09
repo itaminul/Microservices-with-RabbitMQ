@@ -34,7 +34,7 @@ export class DeliveryConsumer {
       if (msg) {
         try {
           const order = JSON.parse(msg.content.toString());
-          await this.deliveryService.processOrder(order.id, order.address);
+          await this.deliveryService.processOrder(order.orderId, order.status);
           this.channel?.ack(msg);
         } catch (error) {
           console.error("Error processing message:", error);
