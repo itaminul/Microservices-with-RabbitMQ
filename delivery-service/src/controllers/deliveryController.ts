@@ -2,12 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { DeliveryService } from "../service/deliveryService";
 const deliveryService = new DeliveryService();
 export class DeliveryController {
-  async createDelivery(req: Request, res: Response, next: NextFunction) {
-    const deliveryId = 1;
-    const statusCheck = "true";
+  async createDelivery(req: Request, res: Response) {
+    const { usersId, deliveryStatus, orderId } = req.body; 
+    const statusCheck = "DELIVERED";
     try {
       const deliver = await deliveryService.createDelivery(
-        deliveryId,
+        usersId,
+        orderId,
         statusCheck
       );
 

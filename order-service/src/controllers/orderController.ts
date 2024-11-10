@@ -16,6 +16,20 @@ export class OrderController {
       res.status(500).json({ message: "Error creating order" });
     }
   };
+
+  getOrderById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const order = await this.orderService.getOrderById(req);
+      res.status(201).json(order);
+    } catch (error) {
+      next(error);
+    }
+    // res.status(201).json(orderId);
+  };
 }
 
 export default function Component() {
