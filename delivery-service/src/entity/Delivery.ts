@@ -19,4 +19,8 @@ export class Delivery {
 
   @Column()
   status?: string;
+
+  @Column({ type: 'varchar', default: 'PENDING' })
+  customerDeliveryStatus?: string;
+
 }
