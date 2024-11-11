@@ -77,8 +77,6 @@ export class OrderService {
 
 
   async updateOrderStatus(id: number, status: string) {
-    console.log('Updating order:', id); // Log values
-    console.log('Updating status:', status); // Log values
     const orderRepository = AppDataSource.getRepository(Order);
     const updateResult = await orderRepository.update(id, { status });
   

@@ -33,8 +33,16 @@ export class DeliveryConsumer {
     this.channel.consume(this.queue, async (msg) => {
       if (msg) {
         try {
-          const order = JSON.parse(msg.content.toString());
-          await this.deliveryService.processOrder(order.usersId, order.orderId, order.status);
+          const content = JSON.parse(msg.content.toString());
+
+          const orderId = content.orderId; 
+          if (!orderId) {
+            console.error("Order ID is missing in the message.");
+            //   this.channel.nack(msg); 
+            return;
+          }
+
+          await this.deliveryService.processOrder(content.usersId, content.orderId, content.status);
           this.channel?.ack(msg);
         } catch (error) {
           console.error("Error processing message:", error);
