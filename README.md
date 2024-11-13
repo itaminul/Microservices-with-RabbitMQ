@@ -1,21 +1,21 @@
-# Microservices Architecture with Express.js, PostgreSQL, TypeORM, and RabbitMQ
+# Microservices Architecture with Express.js, PostgreSQL, TypeORM, Prisma and RabbitMQ
 
 This project is a microservices architecture consisting of three services:
 - **User Service**
 - **Order Service**
 - **Delivery Service**
 
-Each service is built using Express.js, interacts with a PostgreSQL database via TypeORM, and communicates with each other using RabbitMQ for message brokering.
+Each service is built using Express.js, interacts with a PostgreSQL database via TypeORM, Prisma and communicates with each other using RabbitMQ for message brokering.
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
+
 - [Installation](#installation)
 - [Service Overview](#service-overview)
 - [Environment Variables](#environment-variables)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [License](#license)
+
 
 ## Prerequisites
 
@@ -31,16 +31,17 @@ Before you begin, ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/itaminul/Microservices-with-RabbitMQ-Ecommerce.git
-   cd Microservices-with-RabbitMQ-Ecommerce
+   git clone https://github.com/itaminul/Microservices-with-RabbitMQ
+   cd Microservices-with-RabbitMQ
 
-   ## Documentation
+## Documentation
 
 For more information, check out the official documentation:
 
-- [Express.js Documentation](https://expressjs.com/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)
-- [TypeORM Documentation](https://typeorm.io/)
-- [Docker Documentation](https://docs.docker.com/)
+- <a href="https://expressjs.com/" target="_blank">Express.js Documentation</a>
+- <a href="https://www.postgresql.org/docs/" target="_blank">PostgreSQL Documentation</a>
+- <a href="https://www.rabbitmq.com/documentation.html" target="_blank">RabbitMQ Documentation</a>
+- <a href="https://typeorm.io/" target="_blank">TypeORM Documentation</a>
+- <a href="https://www.prisma.io/" target="_blank">Prisma Documentation</a>
+- <a href="https://docs.docker.com/" target="_blank">Docker Documentation</a>
 
