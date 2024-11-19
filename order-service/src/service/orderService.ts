@@ -25,7 +25,7 @@ export class OrderService {
     res: Response,
     next: NextFunction
   ): Promise<Order> {
-    const orderRepository = AppDataSource.getRepository(Order);
+    const orderRepository = AppDataSource.getRepository(Order);    
     const order = new Order();
     order.usersId = req.body.usersId;
     order.product = req.body.product;
@@ -97,6 +97,8 @@ export class OrderService {
     await this.orderProducer.close();
     await this.orderConsumer.close();
   }
+
+  
 }
 
 export default function Component() {

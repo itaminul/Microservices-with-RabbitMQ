@@ -3,7 +3,7 @@ const app = express();
 import router from "./routes/indexRouter";
 import { AppDataSource } from "./data-source";
 import notFound from "./middlewares/notFound";
-const port = 3000;
+const port = 3004;
 
 // Your app logic goes here
 app.get("/", (req, res) => {
@@ -19,8 +19,8 @@ AppDataSource.initialize()
   .then(() => {
    // console.log("Data Source has been initialized!");
 
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+    app.listen(3004, () => {
+      console.log("Server is running on port 3004");
     });
   })
   .catch((error) => {
